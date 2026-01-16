@@ -1,7 +1,7 @@
 public abstract class Role
 {
 	private int health;
-	private final int MAX_HP;
+	private int MAX_HP;
 	private String type; // name of one of the three roles
 	private String entityName;
 	private int defense;
