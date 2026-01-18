@@ -1,9 +1,10 @@
 public class HumanitiesHumanoid extends Adventurer {
-    private String [2][2] moveset = {{"[AA] AMCSO Assault","[DT] Divine Transcendentalism"},{"[PC] Pharaoh's Curse", "[CC] Citation Counter"}};
+    private String [2][2] moveset = {{"[CC] Citation Counter", "[DT] Divine Transcendentalism"},{"[PC] Pharaoh's Curse", "[AA] AMSCO Assault"}};
     private int healCounter = 2;
     private String[2][2] description = {{"filler","filler"},{"filler","filllller"}};
     private int damageMultiplier = 1;
     private int socialCredit = 0; // special resource for humanities people
+    private boolean countCitations = false;
     public HumanitiesHumanoid (String name){
         this(name, 70, 70, 5, "Social Credit", "HumanitiesHumanoid");
     }
@@ -17,28 +18,82 @@ public class HumanitiesHumanoid extends Adventurer {
 				System.out.println(moveset[r][c] + ": " + movesetDescription[r][c]);
 			}
 		}
-	}  
-    public String choseSupport(String move, Adventurer other) {
+	}
+    public void choseSupport(String move) {
         String moveL = move.toLowerCase();
-		if (moveL.equals("AMSCO Assault") || moveL.equals("AA"))
+		if (moveL.equals("Citation Counter") || moveL.equals("CC"))
 		{
-			return amscoAssault(other);
+			citationCounter(this);
 		}
 		else if (moveL.equals("Divine Transcendentalism") || moveL.equals("DT"))
 		{
-			return divineTrans(other);
+			divineTrans(this);
+		}
+    }  
+    public void choseSupport(String move, Adventurer other) {
+        String moveL = move.toLowerCase();
+		if (moveL.equals("Citation Counter") || moveL.equals("CC"))
+		{
+			if (countCitations) {
+                System.out.println("You've already used Citation Counter! Pick another move.")
+            }
+            else {
+                citationCounter(other);
+            }
+		}
+		else if (moveL.equals("Divine Transcendentalism") || moveL.equals("DT"))
+		{
+			divineTrans(other);
 		}
     }
-    public String choseAttack(String move, Adventurer other) {
+    public void divineTrans(Adventurer target) {
+        if (math.Random() < 0.30) {
+            defenseUp(10);
+            heal(10);
+            System.out.println("Divine Transcedentalism successful. 10 points added to defense; 10 HP restored.")
+        }
+        else {
+            System.out.println("Divine Transcedentalism unsuccessful. No effects applied.")
+        }
+    }
+    public void citationCounter(Adventurer target) {
+        defenseUp(15);
+        System.out.println("Citation Counter successful. 15 points added to defense.")
+    }
+    public void choseAttack(String move) {
         String moveL = move.toLowerCase();
 		if (moveL.equals("Pharaoh's Curse") || moveL.equals("PC"))
 		{
-			return faroCurse(other);
+			faroCurse(this);
 		}
-		else if (moveL.equals("Citation Counter") || moveL.equals("CC"))
+		else if (moveL.equals("AMSCO Assault") || moveL.equals("AA"))
 		{
-			return citationCounter(other);
+			amscoAssault(this);
 		}
+    }
+    public void choseAttack(String move, Adventurer other) {
+        String moveL = move.toLowerCase();
+		if (moveL.equals("Pharaoh's Curse") || moveL.equals("PC"))
+		{
+			faroCurse(other);
+		}
+		else if (moveL.equals("AMSCO Assault") || moveL.equals("AA"))
+		{
+			amscoAssault(other);
+		}
+    }
+    public void faroCurse(Adventurer target) {
+
+    }
+    public void amscoAssault(Adventurer target) {
+        target.applyDamage(5);
+        if (math.Random() < 0.30) {
+            defenseUp(5);
+            System.out.println("AMSCO Assault applied. 5 damage done to opponent; 5 points added to defense.");
+        }
+        else {
+            System.out.println("AMSCO Assault applied. 5 damage done to opponent.");
+        }
     }
 
 }  
