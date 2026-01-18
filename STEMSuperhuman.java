@@ -1,15 +1,14 @@
 public class STEMSuperhuman extends Adventurer 
 {
 	// first row - basic attacks, last element always special/ultimate move | second row - support
-	private String[2][2] moveset = {{"Chemical Splash","Uranium"},{"Mystery Concoction","Apple Totem"}};
+	private String[][] moveset = {{"[CS] Chemical Splash","[U] Uranium"},{"[MC] Mystery Concoction","[AT] Apple Totem"}};
 	private int healCounter = 2; // decreases by 1 whenever Mystery Concoction is used
-	private String[2][2] movesetDescription = {{"BASIC ATTACK - 20% chance of dealing 15 damage to yourself; 80% change of dealing 15 damage to enemy","SPECIAL ATTACK - 25% chance of dealing 100 damage to enemy; 25% chance of healing 20 HP; 50% chance of instant death"},{"HEAL (" + healCounter + "uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};
-	private int damageMultiplier = 1;
+	private String[][] movesetDescription = {{"BASIC ATTACK - 20% chance of dealing 15 damage to yourself; 80% change of dealing 15 damage to enemy","SPECIAL ATTACK - 25% chance of dealing 100 damage to enemy; 25% chance of healing 20 HP; 50% chance of instant death"},{"HEAL (" + healCounter + "uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};
 	private int IQ = 0; // this is the special resource | max is 5, which is also the cost of performing the special
 	
 	public STEMSuperhuman(String name)
 	{
-		this(name, 60, 60, 5, "IQ", "STEMSuperhuman");
+		super(name, 60, 60, 5, "IQ", "STEMSuperhuman");
 	}
 
 	public void printMoveset()
@@ -32,50 +31,94 @@ public class STEMSuperhuman extends Adventurer
 	public String support(String move)
 	{
 		String moveL = move.toLowerCase();
-		if (moveL.equals("mystery concotion"))
+		if (moveL.equals("MC"))
 		{
 			return mysteryConcoction(this);
 		}
-		else if (moveL.equals("apple totem"))
+		else if (moveL.equals("AT"))
 		{
 			return appleTotem(this);
+		}
+		else
+		{
+			return "Please input a valid ability name";
 		}
 	}
 	
 	public String support(String move, Adventurer other)
 	{
 		String moveL = move.toLowerCase();
-		if (moveL.equals("mystery concotion"))
+		if (moveL.equals("MC"))
 		{
 			return mysteryConcoction(other);
 		}
-		else if (moveL.equals("apple totem"))
+		else if (moveL.equals("AT"))
 		{
 			return appleTotem(other);
+		}
+		else
+		{
+			return "Please input a valid ability name";
 		}
 	}
 	
 	public String mysteryConcoction(Adventurer receiver)
 	{
-		
+		if (healCounter != 0)
+		{
+			double rand = Math.random();
+			if (rand < 0.1)
+			{
+				receiver.applyDamage(100);
+				return "Yikes! The drink contained a lot of lead and cyanide, instantly killing whoever drinks it!";
+			}
+			else if (rand >= 0.1 && rand < 0.4)
+			{
+				receiver.applyDamage(10);
+				return "Why'd it have expired Pepsi?! The consumer takes 10 damage.";
+			}
+			else
+			{
+				receiver.heal(20);
+				return "Such bliss in a beaker! Its warm, heavenly sweetness blesses its consumer with restoration.";
+			}
+			healCounter--;
+		}
+		else
+		{
+			return "You drank all of your mystery concoctions. You cannot use this ability for the remainder of the battle.";
+		}
 	}
 	
 	public String appleTotem(Adventurer receiver)
 	{
-		
+		double rand = Math.random();
+		if (rand < 0.5)
+		{
+			return "Just a nice 'ol beaker of cold water. Nothing happens.";
+		}
+		else
+		{
+			receiver.setDamageMult(0);
+			return "Dr. Yu has blessed you with temporary protection. You will take no damage--but only for one time!";
+		}
 	}
 	
 	
 	public String attack(String move, Adventurer other)
 	{
 		String moveL = move.toLowerCase();
-		if (moveL.equals("chemical splash"))
+		if (moveL.equals("CS"))
 		{
 			return this.chemicalSplash(other);
 		}
-		else if (moveL.equals("uranium"))
+		else if (moveL.equals("U"))
 		{
 			return this.specialAttack(other); // remember to consider IQ count
+		}
+		else
+		{
+			return "Please input a valid ability name";
 		}
 		
 	}
@@ -104,7 +147,7 @@ public class STEMSuperhuman extends Adventurer
 	{
 		if (this.IQ == 5)
 		{
-			double rand = Math.random()
+			double rand = Math.random();
 			if (rand <= 0.25)
 			{
 				other.applyDamage(100);
@@ -129,64 +172,44 @@ public class STEMSuperhuman extends Adventurer
 
 	@Override
 	public void printStatus()
-	if (health > 0)
 	{
-		System.out.println(role + " of name " + name + ":");
-		if (health > MAX_HP * 0.5)
+		if (this.getHP() > 0)
 		{
-			System.out.print("\u001b[32mGreen");
-		}
-		else if (health <= MAX_HP * 0.5 && health > MAX_HP * 0.25)
-		{
-			System.out.print("u001b[33mYellow");
+			System.out.println(this.getRole() + " of name " + this.getName() + ":");
+			if (this.getHP() > this.getmaxHP() * 0.5)
+			{
+				System.out.print("\u001b[32mGreen");
+			}
+			else if (this.getHP() <= this.getmaxHP() * 0.5 && this.getHP() > this.getmaxHP() * 0.25)
+			{
+				System.out.print("u001b[33mYellow");
+			}
+			else
+			{
+				System.out.print("uoo1b[31mRed");
+			}
+			System.out.print("1) Health - " + this.getHP() + "/" + this.getmaxHP() + "u001b[0m" + "\n2) Stunned - ");
+			if (this.getStunState() == true)
+			{
+				System.out.print(this.getStunState() + " for " + this.getStunCount() + " turns");
+			}
+			else
+			{
+				System.out.print(this.getStunState());
+			}
+			System.out.print("\n3) Defense - " + this.getDefense() + "\n4) " + this.getSpecialName() + " Count - " + this.getSpecial() + "/" + this.getSpecialMax());	
 		}
 		else
 		{
-			System.out.print("uoo1b[31mRed");
+			System.out.println("\u001b[31mRed" + "YOU ARE DEAD.");
+			System.exit(0); // exits the game
 		}
-		System.out.print("1) Health - " + health + "/" + MAX_HP + "u001b[0m" + "\n2) Stunned - ");
-		if (isStunned == true)
-		{
-			System.out.print(isStunned + " for " + stunCount + " turns");
-		}
-		else
-		{
-			System.out.print(isStunned);
-		}
-		System.out.print("\n3) Defense - " + defense + "\n4) " + specialName + " Count - " + specialCount + "/" + "specialMax");	
 	}
-	else
+
+	//allows me to reset the healCounter every battle
+	public void setHealCount(int newHC)
 	{
-		System.out.println("\u001b[31mRed" + "YOU ARE DEAD.")
-		System.exit(0); // exits the game
+		this.healCounter = newHC;
 	}
 	
-	@Override
-	public void applyDamage(int amount){
-		int totalDamage = amount * damageMultiplier;
-		if (defense >= totalDamage)
-			{
-				this.defense -= totalDamage;
-			}
-		else if (defense < totalDamage && defense > 0)
-			{
-				int temp = this.defense;
-				this.defense = 0;
-				this.health -= totalDamage - temp; 
-			}
-		else
-			{
-				this.health = this.health - totalDamage;
-			}
-		
-		if (health < 0)
-		{
-			health = 0;
-		}
-	
-		if (damageMultiplier != 1)
-		{
-			damageMultiplier = 1;
-		}
-	}
 }

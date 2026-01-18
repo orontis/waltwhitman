@@ -1,8 +1,7 @@
 public class HumanitiesHumanoid extends Adventurer {
-    private String [2][2] moveset = {{"[CC] Citation Counter", "[DT] Divine Transcendentalism"},{"[PC] Pharaoh's Curse", "[AA] AMSCO Assault"}};
+    private String [][] moveset = {{"[CC] Citation Counter", "[DT] Divine Transcendentalism"},{"[PC] Pharaoh's Curse", "[AA] AMSCO Assault"}};
     private int healCounter = 2;
-    private String[2][2] description = {{"filler","filler"},{"filler","filllller"}};
-    private int damageMultiplier = 1;
+    private String[][] description = {{"filler","filler"},{"filler","filllller"}};
     private int socialCredit = 0; // special resource for humanities people
     private boolean countCitations = false;
     public HumanitiesHumanoid (String name){

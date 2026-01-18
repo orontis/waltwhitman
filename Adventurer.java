@@ -8,7 +8,7 @@ public abstract class Adventurer{
 	private String role;
 	private String name;
 	private int defense = 0;
-
+	private int damageMultiplier = 1;
 	private boolean isStunned = false;
 	private int stunCount = 0;
 
@@ -81,7 +81,7 @@ public void printStatus()
 * 3) Supporting - You can either support your allies or yourself
 * All abilities can only be performed if the adventurer is not stunned.
 */
-	public abstract void action(String selection) // choices are Rest, Attack <Name>, Support, Support <Name>
+//	public abstract void action(String selection) // choices are Rest, Attack <Name>, Support, Support <Name>
 
   //concrete method written using abstract methods.
   //refill special resource by amount, but only up to at most getSpecialMax()
@@ -109,26 +109,32 @@ public void printStatus()
 
 
   public void applyDamage(int amount){
-	if (defense >= damage)
+	int totalDamage = amount * damageMultiplier;
+	if (defense >= totalDamage)
 		{
-			this.defense -= damage;
+			this.defense -= totalDamage;
 		}
-	else if (defense < damage && defense > 0)
+	else if (defense < totalDamage && defense > 0)
 		{
 			int temp = this.defense;
 			this.defense = 0;
-			this.health -= damage - temp; 
+			this.health -= totalDamage - temp; 
 		}
 	else
 		{
-			this.health = this.health - damage;
+			this.health = this.health - totalDamage;
 		}
 		
 	if (health < 0)
 	{
 		health = 0;
 	}
-  }
+	
+	if (damageMultiplier != 1)
+	{
+		damageMultiplier = 1;
+	}
+}
 
 public void heal(int healing) // heals entity
 	{
@@ -177,6 +183,21 @@ public void heal(int healing) // heals entity
 	return specialMax;
   }
   
+  public boolean getStunState()
+  {
+	return this.isStunned;
+  }
+  
+  public int getStunCount()
+  {
+	return this.stunCount;
+  }
+  
+  public int getDefense()
+  {
+	return this.defense;
+  }
+  
 //-----------------------------------------------------------------------//
 //Set methods
     public void setSpecial(int n)
@@ -188,4 +209,8 @@ public void heal(int healing) // heals entity
       this.name = s;
   }
   
+  public void setDamageMult(int newDM)
+	{
+		damageMultiplier = newDM;
+	}
 }
