@@ -32,7 +32,7 @@ public abstract class Adventurer{
  
 public abstract void printMoveset(); // prints all of the character's moves
 
-
+/**Prints a character's status. It shows their current health, whether they are stunned and for how long, their defense, and the number of special resources they have*/
 public void printStatus()
 {
 	System.out.println(role + " of name " + name + ":");
@@ -66,6 +66,8 @@ public void printStatus()
   }
 
 //---------------------------------------------------------------------------------------//
+
+//Want to add a general action(String choice) method that allows the user to choose what option they have. The user isn't allowed to choose anything if they are stunned.
 
 
   //concrete method written using abstract methods.
