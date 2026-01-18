@@ -3,7 +3,6 @@
 import java.util.Random;
 
 public abstract class Adventurer{
-  private String[][] moveset; // first row - basic attacks | second row - support
 	private int health;
 	private int MAX_HP;
 	private String role;
@@ -17,11 +16,10 @@ public abstract class Adventurer{
 	private int specialCount = 0;
 	private String specialName;
 
-  public Adventurer(String name, int health, int MAX_HP, String[][] moveset, int specialMax, String specialName, String role){
+  public Adventurer(String name, int health, int MAX_HP, int specialMax, String specialName, String role){
       this.name = name;
       this.health = health;
       this.MAX_HP = MAX_HP;
-	  this.moveset = moveset;
 	  this.specialMax = specialMax;
 	  this.specialName = specialName;
 	  this.role = role;
@@ -67,8 +65,23 @@ public void printStatus()
 
 //---------------------------------------------------------------------------------------//
 
+	public String rest()
+	{
+		this.restoreSpecial(2);
+		return "You rest for 1 turn and gain 2 " + specialName;
+	}
+
+
 //Want to add a general action(String choice) method that allows the user to choose what option they have. The user isn't allowed to choose anything if they are stunned.
 
+
+/*Action Mechanics:
+* 1) Resting - This costs 1 turn, but it increases your special resource by 2
+* 2) Attacking - As the name suggests, you choose any of the attacks that you want to do. You can only use your special move if you have enough special.
+* 3) Supporting - You can either support your allies or yourself
+* All abilities can only be performed if the adventurer is not stunned.
+*/
+	public abstract void action(String selection) // choices are Rest, Attack <Name>, Support, Support <Name>
 
   //concrete method written using abstract methods.
   //refill special resource by amount, but only up to at most getSpecialMax()
@@ -84,13 +97,16 @@ public void printStatus()
   public abstract String attack(String move, Adventurer other);
 
   //heall or buff the target adventurer
-  public abstract String support(Adventurer other);
+  public abstract String support(String move, Adventurer other);
 
   //heall or buff self
-  public abstract String support();
+  public abstract String support(String move);
+
+
 
   //hurt or hinder the target adventurer, consume some special resource
   public abstract String specialAttack(Adventurer other);
+
 
   public void applyDamage(int amount){
 	if (defense >= damage)
@@ -131,6 +147,11 @@ public void heal(int healing) // heals entity
   //Get Methods
   public String getName(){
     return name;
+  }
+  
+  public String getRole()
+  {
+	return role;
   }
 
   public int getHP(){
