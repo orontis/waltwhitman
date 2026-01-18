@@ -59,6 +59,12 @@ public void printStatus()
 	}
 	System.out.print("\n3) Defense - " + defense + "\n4) " + specialName + " Count - " + specialCount + "/" + "specialMax");	
 }
+
+  //toString method
+  public String toString(){
+    return this.getName();
+  }
+
 //---------------------------------------------------------------------------------------//
 
 
@@ -119,12 +125,6 @@ public void heal(int healing) // heals entity
 	{
 		this.defense += addDefense;
 	}
-
-  //toString method
-  public String toString(){
-    return this.getName();
-  }
-
 //---------------------------------------------------------------------//
   //Get Methods
   public String getName(){
