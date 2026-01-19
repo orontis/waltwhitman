@@ -4,11 +4,11 @@ import java.util.ArrayList;
 
 public class Game
 {	
-	private static Adventurer[] heroTeam = new Adventurer[2];
+	private static ArrayList<Adventurer> heroTeam = new ArrayList<Adventurer>();
 	private static ArrayList<Adventurer> enemyTeam = new ArrayList<Adventurer>();
 	private static int floor = 10;
+	private static int enemiesDefeated = 0;
 	private static boolean gameActive = false;
-
 	public static void main(String[] args)
 	{
 		
@@ -55,6 +55,7 @@ public class Game
 	
 	public static void executeGame()
 	{
+		//Introduction and character selection
 		System.out.println("\nThank you for joining the resistance. We are currently on the 10th floor and need to make our way to the 1st floor to escape. You will bring with you a team of 2 students to help you fight off the enemies.");
 		print("\nFirst, of what type shall your first hero be, a STEM Superhuman (S) or Humanities Humanoid (H)?");
 		print("\n");
@@ -78,7 +79,7 @@ public class Game
 		print("\n");
 		heroTeam[1].printMoveset();
 		print("\n\nAre you ready to begin? [Y/N]");
-		playerReady();
+		playerReady(); // if player confirms, the game begins and is run through the method runBattles()
 	}
 	
 	public static void playerReady()
@@ -87,7 +88,7 @@ public class Game
 		String answer = input.next();
 		if (answer.equals("y") || answer.equals("Y"))
 		{
-			startAdventure();
+			battles(10);
 		}
 		else if (answer.equals("n") || answer.equals("N"))
 		{
@@ -101,12 +102,8 @@ public class Game
 		}
 	}
 	
-	public static void startAdventure()
-	{
-		print("yay!");
-	}
-
-	public static String chooseHeroRole(int n)
+//Used for character selection!
+public static String chooseHeroRole()
 	{
 		Scanner chooseFirstRole = new Scanner(System.in);
 		String roleInput = chooseFirstRole.next();
@@ -124,7 +121,7 @@ public class Game
 		else
 		{
 			System.out.println("\nI didn't understand that. Please type \"S\" for STEMSuperhuman or \"H\" for HumanitiesHumanoid");
-			return chooseHeroRole(n);
+			return chooseHeroRole();
 		}
 	}
 	
@@ -136,12 +133,76 @@ public class Game
 		
 		if (role.equals("STEMSuperhuman"))
 		{
-			heroTeam[n] = new STEMSuperhuman(name);
+			heroTeam.add(new STEMSuperhuman(name));
 		}
 		else
 		{
-			heroTeam[n] = new HumanitiesHumanoid(name);
+			heroTeam.add(new HumanitiesHumanoid(name));
+		}
+	}	
+
+//Executing the battles
+
+	public static void battles(int currFloor)
+	{
+		if (floor == 0)
+		{
+			System.out.println("Amazing job, warrior! You have used strategy and bravery to push through each floor, saving the school and leaving safe and sound. You will be an inspiration for the many generations of students to come! \n\nDuring your adventure, you defeated " + enemiesDefeated + " enemies.");
+			refreshHighScore();
+		}
+		else
+		{
+			prepareEnemies(floor);
+			executeBattle(
+			checkTeamHealth(heroTeam);
+			battles(floor - 1);
 		}
 	}
-
+	
+	//creates the enemy team
+	public static void prepareEnemies(int floor)
+	{
+		int rand = (int) (Math.random() * 2);
+		for (int i = 0; i < rand; i++)
+		{
+			
+		}
+	}
+	
+	//going to be used to assess how many adventurers the player has alive
+	public static void checkTeamHealth(ArrayList<Adventurer> team)
+	{
+		print("\nAssessing your team's health...")
+		if (team.size() == 0)
+		{
+			print("\nYour entire team has died. Your adventure is over. You were able to make it to floor " + floor + ".");
+			System.exit(0);
+		}
+		else
+		{
+			for (int i = 0; i < team.size(); i++)
+			{
+				Adventurer currAd = team.get(i);
+				if (currAd.getAlive())
+				{
+					print("    - " + currAd + " is still alive");
+				}
+				else
+				{
+					print("    - " + currAd + " is DEAD");
+					team.remove(i);
+				}
+			}
+			print("\nYour team after this battle: " + team);
+		}
+	}
+	
+	public static void refreshHighScore()
+	{
+		if (enemiesDefeated > highScore)
+		{
+			print("Congrats! You have a new highscore!");
+			highScore = enemiesDefeated;
+		}
+	}
 }

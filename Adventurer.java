@@ -2,7 +2,7 @@
 
 import java.util.Random;
 
-public abstract class Adventurer{
+public abstract class Adventurer extends Game{
 	private int health;
 	private int MAX_HP;
 	private String role;
@@ -11,10 +11,12 @@ public abstract class Adventurer{
 	private int damageMultiplier = 1;
 	private boolean isStunned = false;
 	private int stunCount = 0;
-
+	private static boolean curseEnabled = false;
 	private int specialMax;
 	private int specialCount = 0;
 	private String specialName;
+	private ArrayList<Adventurer> enemyTeam;
+	private boolean alive = true; // once an adventurer dies, they can no longer be revived and are removed from the corresponding team
 
   public Adventurer(String name, int health, int MAX_HP, int specialMax, String specialName, String role){
       this.name = name;
@@ -194,6 +196,20 @@ public void heal(int healing) // heals entity
 	return this.defense;
   }
   
+  public boolean getCurseState()
+  {
+	return curseEnabled;
+  }
+  
+  public ArrayList<Adventurer> getEnemies()
+  {
+	return enemyTeam;
+  }
+
+  public boolean getAlive()
+  {
+	return alive;
+  }
 //-----------------------------------------------------------------------//
 //Set methods
     public void setSpecial(int n)
@@ -228,5 +244,20 @@ public void heal(int healing) // heals entity
 	public void setStunCount(int n)
 	{
 		this.stunCount = n;
+	}
+	
+	public void setCurse(boolean newState)
+	{
+		curseEnabled = newState;
+	}
+	
+	public void setEnemies(ArrayList<Adventurer> newEnemies)
+	{
+		enemyTeam = newEnemies;
+	}
+	
+	public void setLifeStatus(boolean newStatus)
+	{
+		alive = newStatus;
 	}
 }

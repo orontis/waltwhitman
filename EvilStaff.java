@@ -10,80 +10,177 @@ public class EvilStaff extends Adventurer
 	private String[][] movesetDescription_lunch = {{"BASIC ATTACK - 50% chance of dealing 15 damage; 50% chance of healing the enemy for 5 HP","BASIC ATTACK - 30% chance of stunning the player for 2 turns; deals 5 damage","SPECIAL ATTACK - 30% chance of dealing 70 damage; 30% chance of healing 15 HP; 30% chance of stunning player for 2 turns; 10% chance of instantly killing the player."},{"HEAL (uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};
 	private String[][] activeMoveset = teacher_MS;
 	private String[][] activeDesc = movesetDescription_teach;
-	private static int enemiesCreated = 0;
-	private static int floor = 11 - enemiesCreated;
+	private static int floor;
 	public int abilityBuff = 0; // only 5 if the lunch lady is on first floor
+	
+	public EvilStaff(String name, int floor)
+	{
+		super(name, 100, 100, 5, "tears", "teacher");
+		this.floor = floor;
+		enemiesCreated++;
+		refreshState();
+	}
+	
+	public static void setFloor(int newFloor)
+	{
+		floor = newFloor;
+	}
 	
 	public String support(String move)
 	{
-		if (floor == 5 || floor == 1)
+		if (getCurseState())
 		{
-			return chocoMilk(this);
+			int rand = (int) (Math.random() * 2);
+			if ((this.getEnemies()).size() == 1)
+			{
+				rand = 0;
+			}
+			if (floor == 5 || floor == 1)
+			{
+				setCurseState(false);
+				return chocoMilk(this.getEnemies().get(rand));
+			}
+			else
+			{
+				setCurseState(false);
+				return coffee(this.getEnemies().get(rand)));
+			}
 		}
 		else
 		{
-			return coffee(this);
+			if (floor == 5 || floor == 1)
+			{
+				return chocoMilk(this);
+			}
+			else
+			{
+				return coffee(this);
+			}
 		}
 	}
 	
 	public String support(String move, Adventurer other)
 	{
-		if (floor == 5 || floor == 1)
+		if (getCurseState())
 		{
-			return chocoMilk(other);
+			support(move);
 		}
 		else
 		{
-			return coffee(other);
-		}	
+			if (floor == 5 || floor == 1)
+			{
+				return chocoMilk(other);
+			}
+			else
+			{
+				return coffee(other);
+			}	
+		}
 	}
 	
 	public String attack(String move, Adventurer other)
 	{
-		if (floor == 5 || floor == 1)
+		if (getCurseState())
 		{
-			if (move.equals("MM"))
+			if (floor == 5 || floor == 1)
 			{
-				return mysteryMeat(other);
-			}
-			else if (move.equals("GF"))
-			{
-				return fruit(other);
-			}
-			else
-			{
-				if (this.getSpecial() != 5)
+				if (move.equals("MM"))
 				{
-					return "Lunch Lady attempted to use her divine spatula, but It decided that she was not worthy yet.";
+					setCurseState(false);
+					return mysteryMeat(this);
+				}
+				else if (move.equals("GF"))
+				{
+					setCurseState(false);
+					return fruit(this);
 				}
 				else
 				{
-					this.setSpecial(this.getSpecial() - 5);
-					return divineSpatula(other);
+					if (this.getSpecial() != 5)
+					{
+						setCurseState(false);
+						return "Lunch Lady attempted to use her divine spatula, but It decided that she was not worthy yet.";
+					}
+					else
+					{
+						setCurseState(false);
+						this.setSpecial(this.getSpecial() - 5);
+						return divineSpatula(this);
+					}
+				}	
+			}
+			else
+			{
+				if (move.equals("ED"))
+				{
+					return emotionalDamage(this);
 				}
-			}	
+				else if (move.equals("PQ"))
+				{
+					return popQuiz(this);
+				}
+				else
+				{
+					if (this.getSpecial() != 5 && ultCounter_teach != 1)
+					{
+						return "The teacher attempted to assign the final exam, but your aura was too powerful that the exam starting answering itself.";
+					}
+					else
+					{
+						this.setSpecial(this.getSpecial() - 5);
+						ultCounter_teach--;
+						return finalExam(this);
+					}
+				}
+			}
 		}
 		else
 		{
-			if (move.equals("ED"))
+			if (floor == 5 || floor == 1)
 			{
-				return emotionalDamage(other);
-			}
-			else if (move.equals("PQ"))
-			{
-				return popQuiz(other);
-			}
-			else
-			{
-				if (this.getSpecial() != 5 && ultCounter_teach != 1)
+				if (move.equals("MM"))
 				{
-					return "The teacher attempted to assign the final exam, but your aura was too powerful that the exam starting answering itself.";
+					return mysteryMeat(other);
+				}
+				else if (move.equals("GF"))
+				{
+					return fruit(other);
 				}
 				else
 				{
-					this.setSpecial(this.getSpecial() - 5);
-					ultCounter_teach--;
-					return finalExam(other);
+					if (this.getSpecial() != 5)
+					{
+						return "Lunch Lady attempted to use her divine spatula, but It decided that she was not worthy yet.";
+					}
+					else
+					{
+						this.setSpecial(this.getSpecial() - 5);
+						return divineSpatula(other);
+					}
+				}	
+			}
+			else
+			{
+				if (move.equals("ED"))
+				{
+					return emotionalDamage(other);
+				}
+				else if (move.equals("PQ"))
+				{
+					return popQuiz(other);
+				}
+				else
+				{
+					if (this.getSpecial() != 5 && ultCounter_teach != 1)
+					{
+						return "The teacher attempted to assign the final exam, but your aura was too powerful that the exam starting answering itself.";
+					}
+					else
+					{
+						this.setSpecial(this.getSpecial() - 5);
+						ultCounter_teach--;
+						return finalExam(other);
+					}
 				}
 			}
 		}
@@ -213,12 +310,7 @@ public class EvilStaff extends Adventurer
 	}
 	
 	
-	public EvilStaff(String name, int floor)
-	{
-		super(name, 100, 100, 5, "tears", "teacher");
-		enemiesCreated++;
-		refreshState();
-	}
+
 	
 	public void setMoveSet(String[][] newMS)
 	{

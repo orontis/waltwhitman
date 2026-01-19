@@ -117,7 +117,8 @@ public class HumanitiesHumanoid extends Adventurer {
 		}
     }
     public String faroCurse(Adventurer target) {
-		return "fill in later";
+		setCurse(true);
+		return "The Pharoah enters the battlefield, looking with disdain at your opponents.";
     }
     public String amscoAssault(Adventurer target) {
         target.applyDamage(5);
@@ -129,5 +130,41 @@ public class HumanitiesHumanoid extends Adventurer {
             return "AMSCO Assault applied. 5 damage done to opponent.";
         }
     }
+	
+	public void printStatus()
+	{
+		if (this.getHP() > 0)
+		{
+			System.out.println(this.getRole() + " of name " + this.getName() + ":");
+			if (this.getHP() > this.getmaxHP() * 0.5)
+			{
+				System.out.print("\u001b[32m");
+			}
+			else if (this.getHP() <= this.getmaxHP() * 0.5 && this.getHP() > this.getmaxHP() * 0.25)
+			{
+				System.out.print("\033[33m");
+			}
+			else
+			{
+				System.out.print("\033[91m");
+			}
+			System.out.print("1) Health - " + this.getHP() + "/" + this.getmaxHP());
+			System.out.print("\033[37m");
+			System.out.print("\n2) Stunned - ");
+			if (this.getStunState() == true)
+			{
+				System.out.print(this.getStunState() + " for " + this.getStunCount() + " turns");
+			}
+			else
+			{
+				System.out.print(this.getStunState());
+			}
+			System.out.print("\n3) Defense - " + this.getDefense() + "\n4) " + this.getSpecialName() + " Count - " + this.getSpecial() + "/" + this.getSpecialMax());	
+		}
+		else
+		{
+			this.setLifeStatus(false);
+		}
+	}
 
 }  

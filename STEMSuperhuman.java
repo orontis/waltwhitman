@@ -229,8 +229,7 @@ public class STEMSuperhuman extends Adventurer
 		}
 		else
 		{
-			System.out.println("\u001b[31mRed" + "YOU ARE DEAD.");
-			System.exit(0); // exits the game
+			this.setLifeStatus(false);
 		}
 	}
 
