@@ -104,10 +104,6 @@ public void printStatus()
 
 
 
-  //hurt or hinder the target adventurer, consume some special resource
-  public abstract String specialAttack(Adventurer other);
-
-
   public void applyDamage(int amount){
 	int totalDamage = amount * damageMultiplier;
 	if (defense >= totalDamage)
@@ -205,6 +201,11 @@ public void heal(int healing) // heals entity
 	specialCount = n; 
   }
   
+  public void setSpecialName(String newName)
+  {
+	this.specialName = newName;
+  }
+  
   public void setName(String s){
       this.name = s;
   }
@@ -212,5 +213,20 @@ public void heal(int healing) // heals entity
   public void setDamageMult(int newDM)
 	{
 		damageMultiplier = newDM;
+	}
+	
+	public void setRole(String newRole)
+	{
+		this.role = newRole;
+	}
+	
+	public void setStunState(boolean newState)
+	{
+		this.isStunned = newState;
+	}
+	
+	public void setStunCount(int n)
+	{
+		this.stunCount = n;
 	}
 }
