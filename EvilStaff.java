@@ -247,8 +247,6 @@ public class EvilStaff extends Adventurer
 		}
 	}
 	
-	
-	@Override
 	public void printMoveset()
 	{
 		System.out.print("These are the abilities for the ");

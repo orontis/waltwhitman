@@ -3,17 +3,30 @@
 public class STEMSuperhuman extends Adventurer 
 {
 	// first row - basic attacks, last element always special/ultimate move | second row - support
-	private String[][] moveset = {{"[CS] Chemical Splash","[U] Uranium"},{"[MC] Mystery Concoction","[AT] Apple Totem"}};
-	private int healCounter = 2; // decreases by 1 whenever Mystery Concoction is used
-	private String[][] movesetDescription = {{"BASIC ATTACK - 20% chance of dealing 15 damage to yourself; 80% change of dealing 15 damage to enemy","SPECIAL ATTACK - 25% chance of dealing 100 damage to enemy; 25% chance of healing 20 HP; 50% chance of instant death"},{"HEAL (" + healCounter + "uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};	
+	private static String[][] moveset = {{"[CS] Chemical Splash","[U] Uranium"},{"[MC] Mystery Concoction","[AT] Apple Totem"}};
+	private static int healCounter = 2; // decreases by 1 whenever Mystery Concoction is used
+	private static String[][] movesetDescription = {{"BASIC ATTACK - 20% chance of dealing 15 damage to yourself; 80% change of dealing 15 damage to enemy","SPECIAL ATTACK - 25% chance of dealing 100 damage to enemy; 25% chance of healing 20 HP; 50% chance of instant death"},{"HEAL (" + healCounter + " uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};	
 	public STEMSuperhuman(String name)
 	{
 		super(name, 60, 60, 5, "IQ", "STEMSuperhuman");
 	}
 
+
+	public static void printMoveset_static()
+	{
+		System.out.println("These are the abilities available to the STEM Superhuman:");
+		for (int r = 0; r < 2; r++)
+		{
+			for (int c = 0; c < 2; c++)
+			{
+				System.out.println(moveset[r][c] + ": " + movesetDescription[r][c]);
+			}
+		}
+	}
+
 	public void printMoveset()
 	{
-		System.out.println("These are the abilities available to the " + this.getRole() + " :");
+		System.out.println("These are the abilities available to the STEM Superhuman " + this.getName() + ":");
 		for (int r = 0; r < 2; r++)
 		{
 			for (int c = 0; c < 2; c++)
