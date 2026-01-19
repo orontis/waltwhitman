@@ -62,53 +62,79 @@ public class Game
 		print("\n----------------------------------------------------------------------------------------------\n");
 		HumanitiesHumanoid.printMoveset_static();
 		
-		print("\n\n")
-		chooseHeroes(0);
+		print("\n\n");
+		chooseHeroName(0, chooseHeroRole(0));
 		
 		print("\nNext, of what type shall your second hero be, a STEM Superhuman (S) or Humanities Humanoid (H)?");
-		chooseHeroes(1 /*index*/);
+		chooseHeroName(1, chooseHeroRole(1 /*index*/));
 		
-		print("\nGreat choices! I'm sure they'll do great on your journey.");
+		print("\nSpend some time to get acquainted with your team before your departure:\n");
+		heroTeam[0].printStatus();
+		print("\n");
+		heroTeam[0].printMoveset();
+		print("\n\n");
+		
+		heroTeam[1].printStatus();
+		print("\n");
+		heroTeam[1].printMoveset();
+		print("\n\nAre you ready to begin? [Y/N]");
+		playerReady();
 	}
 	
-	public static boolean checkInput(String input, String[] validInputs)
+	public static void playerReady()
 	{
-		for (int i = 0; i < validInputs.length; i++)
+		Scanner input = new Scanner(System.in);
+		String answer = input.next();
+		if (answer.equals("y") || answer.equals("Y"))
 		{
-			if (input.equals(validInputs[i]))
-			{
-				return true;
-			}
+			startAdventure();
 		}
-		return false;
+		else if (answer.equals("n") || answer.equals("N"))
+		{
+			print("We hope you return to save the school!");
+			System.exit(0);
+		}
+		else
+		{
+			print("I didn't understand that. Please type \"Y\" to continue or \"N\" to close the game.");
+			playerReady();
+		}
 	}
 	
-	public static void chooseHeroes(int n)
+	public static void startAdventure()
+	{
+		print("yay!");
+	}
+
+	public static String chooseHeroRole(int n)
 	{
 		Scanner chooseFirstRole = new Scanner(System.in);
 		String roleInput = chooseFirstRole.next();
 		String firstRole = null;
-		if (firstType_og.equals("S") || firstType_og.equals("s"))
+		if (roleInput.equals("S") || roleInput.equals("s"))
 		{
-			validInput = true;
-			firstType = "STEMSuperhuman";
+			firstRole = "STEMSuperhuman";
+			return firstRole;
 		}
-		else if (firstType_og.equals("H") || firstType_og.equals("h"))
+		else if (roleInput.equals("H") || roleInput.equals("h"))
 		{
-			validInput = true;
-			firstType = "HumanitiesHumanoid";
+			firstRole = "HumanitiesHumanoid";
+			return firstRole;
 		}
 		else
 		{
 			System.out.println("\nI didn't understand that. Please type \"S\" for STEMSuperhuman or \"H\" for HumanitiesHumanoid");
+			return chooseHeroRole(n);
 		}
 	}
-		
+	
+	public static void chooseHeroName(int n, String role)
+	{
 		print("\nWhat should the name of your hero be?");
 		Scanner chooseName = new Scanner(System.in);
 		String name = chooseName.next();
 		
-		if (firstType.equals("STEMSuperhuman"))
+		if (role.equals("STEMSuperhuman"))
 		{
 			heroTeam[n] = new STEMSuperhuman(name);
 		}

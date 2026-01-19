@@ -1,8 +1,9 @@
 public class HumanitiesHumanoid extends Adventurer {
-    private static String [][] moveset = {{"[AA] AMSCO Assault","[PC] Pharaoh's Curse"},{"[CC] Citation Counter", "[DT] Divine Transcendentalism"}};
-    private static String[][] description = {{"filler","filler"},{"filler","filllller"}};
-    private int socialCredit = 0; // special resource for humanities people
-    private boolean countCitations = false;
+    private static String [][] moveset = {{"[AA] AMSCO Assault","[PC] Pharaoh's Curse"},{"[CC] Citation Counter", "[DT] Divine Transcendentalism"}};     
+	private static int countCitations_static = 2;
+	private static String[][] description = {{"BASIC ATTACK - Deals 5 damage; 30% chance to increase Defense by 5","SPECIAL - 50% chance of success and 50% chance of failure; If successful, the move steals the enemy's next move. Damage done to the ability's target is reflected back to the attacker. Healing done by the enemy is directed to a random hero."},{"DEFEND (" + countCitations_static + " uses) - Defense up by 15","HEAL - 70% chance of healing 10 HP and increasing defense by 10; 30% chance of doing nothing"}};
+    private int socialCredit = 0; // special resource for humanities people | special costs 5 social credit
+	private int countCitations = 2; // move can't be used when variable reaches 0
     public HumanitiesHumanoid (String name){
         super(name, 70, 70, 5, "Social Credit", "HumanitiesHumanoid");
     }
@@ -26,7 +27,14 @@ public class HumanitiesHumanoid extends Adventurer {
 		{
 			for (int c = 0; c < 2; c++)
 			{
-				System.out.println(moveset[r][c] + ": " + description[r][c]);
+				if (c == 0 && r == 1)
+				{
+					System.out.println("Citation Counter: SUPPORT (" + countCitations + " uses left) - Defense up by 15");
+				}
+				else
+				{
+					System.out.println(moveset[r][c] + ": " + description[r][c]);
+				}
 			}
 		}
 	}
@@ -34,11 +42,11 @@ public class HumanitiesHumanoid extends Adventurer {
 	
     public String support(String move) {
         String moveL = move.toLowerCase();
-		if (moveL.equals("Citation Counter") || moveL.equals("CC"))
+		if (moveL.equals("citation counter") || moveL.equals("cc"))
 		{
 			return citationCounter(this);
 		}
-		else if (moveL.equals("Divine Transcendentalism") || moveL.equals("DT"))
+		else if (moveL.equals("divine transcendentalism") || moveL.equals("dt"))
 		{
 			return divineTrans(this);
 		}
@@ -51,7 +59,7 @@ public class HumanitiesHumanoid extends Adventurer {
         String moveL = move.toLowerCase();
 		if (moveL.equals("Citation Counter") || moveL.equals("CC"))
 		{
-			if (countCitations) {
+			if (countCitations == 0) {
                 return "You've already used Citation Counter! Pick another move.";
             }
             else {
