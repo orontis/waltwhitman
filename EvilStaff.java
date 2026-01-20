@@ -1,23 +1,34 @@
 import java.util.Scanner;
+import java.util.ArrayList;
 
 public class EvilStaff extends Adventurer
 {
 	// first row - basic attacks, last element always special/ultimate move | second row - support
 	private int ultCounter_teach = 1; // decreases by 1 whenever ult move for teacher is used
-	private String[][] lunchLady_MS = {{"[MM] Mystery Meat","[GF] \"Please Grab a Fruit!\"","[DS] Divine Spatula"},{"[CM] Choco Milk"}};
-	private String[][] teacher_MS = {{"[ED] Emotional Damage","[PQ] Pop Quiz", "[FE] THE FINAL EXAM"},{"[MD] McDonald's Coffee"}};
+	private String[][] lunchLady_MS = {{"\u001B[31m[MM] Mystery Meat\u001B[0m","\u001B[32m[GF] \"Please Grab a Fruit!\"\u100B[0m","\u100B[33m[DS] \u100B[31mD\u001B[32mi\u001B[34mv\u001B[35mi\u001B[36mn\u001B[33me \u001B[31mS\u001B[32mp\u001B[34ma\u001B[35mt\u001B[36mu\u001B[33ml\u001B[31ma\u001B[0m"},{"\u001B[38;5;94m[CM] Choco Milk\u001B[0m"}};
+	private String[][] teacher_MS = {{"\u001B[96m[ED] Emotional Damage\u001B[0m","\u001B[93m[PQ] Pop Quiz\u001B[0m", "\u001B[33m[FE] \u001B[34mT\u001B[35mH\u001B[36mE \u001B[31mF\u001B[32mI\u001B[33mN\u001B[34mA\u001B[35mL \u001B[36mE\u001B[31mX\u001B[32mA\u001B[33mM\u001B[0m"},{"\u001B[93m[MD] McDonald's Coffee\u001B[0m"}};
 	private String[][] movesetDescription_teach = {{"BASIC ATTACK - Stuns player for 1 turn; 50% chance of dealing 15 damage; 50% chance of dealing 10 damage","BASIC ATTACK - Gives the player a random math problem; deals 5 damage if player gives a wrong answer", "ULTIMATE ATTACK (" + ultCounter_teach + " uses left) - If the player has less than 25 HP, they instantly die."},{"HEAL - Heals 5 HP"}};
 	private String[][] movesetDescription_lunch = {{"BASIC ATTACK - 50% chance of dealing 15 damage; 50% chance of healing the enemy for 5 HP","BASIC ATTACK - 30% chance of stunning the player for 2 turns; deals 5 damage","SPECIAL ATTACK - 30% chance of dealing 70 damage; 30% chance of healing 15 HP; 30% chance of stunning player for 2 turns; 10% chance of instantly killing the player."},{"HEAL (uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};
 	private String[][] activeMoveset = teacher_MS;
 	private String[][] activeDesc = movesetDescription_teach;
+	private ArrayList<Adventurer> enemies;
 	private static int floor;
 	public int abilityBuff = 0; // only 5 if the lunch lady is on first floor
+	
+	public void setEnemies(ArrayList<Adventurer> a)
+	{
+		enemies = a;
+	}
+	
+	public ArrayList<Adventurer> getEnemies()
+	{
+		return enemies;
+	}
 	
 	public EvilStaff(String name, int floor)
 	{
 		super(name, 100, 100, 5, "tears", "teacher");
 		this.floor = floor;
-		enemiesCreated++;
 		refreshState();
 	}
 	
@@ -28,6 +39,8 @@ public class EvilStaff extends Adventurer
 	
 	public String support(String move)
 	{
+		if (!this.getStunState())
+		{
 		if (getCurseState())
 		{
 			int rand = (int) (Math.random() * 2);
@@ -43,7 +56,7 @@ public class EvilStaff extends Adventurer
 			else
 			{
 				setCurseState(false);
-				return coffee(this.getEnemies().get(rand)));
+				return coffee(this.getEnemies().get(rand));
 			}
 		}
 		else
@@ -57,29 +70,37 @@ public class EvilStaff extends Adventurer
 				return coffee(this);
 			}
 		}
+		}
+		else
+		{
+			return "Enemy tried to support but failed since they are stunned.";
+		}
 	}
 	
 	public String support(String move, Adventurer other)
 	{
+		if (!this.getStunState())
+		{
 		if (getCurseState())
 		{
 			support(move);
 		}
+		else if (floor == 5 || floor == 1)
+		{
+			return chocoMilk(other);			
+		}
+		return coffee(other);
+		}
 		else
 		{
-			if (floor == 5 || floor == 1)
-			{
-				return chocoMilk(other);
-			}
-			else
-			{
-				return coffee(other);
-			}	
+			return "Enemy tried to support but failed since they are stunned.";
 		}
 	}
 	
 	public String attack(String move, Adventurer other)
 	{
+		if (!this.getStunState())
+		{
 		if (getCurseState())
 		{
 			if (floor == 5 || floor == 1)
@@ -183,6 +204,11 @@ public class EvilStaff extends Adventurer
 					}
 				}
 			}
+		}
+		}
+		else
+		{
+			return "Enemy tried to attack but failed since they are stunned.";
 		}
 	}
 	
@@ -360,9 +386,5 @@ public class EvilStaff extends Adventurer
 		}
 	}
 	
-	//will have to work on later
-	public static int getEnemiesDefeated()
-	{
-		return enemiesCreated - 1; // essentially, this will tell the user how many enemies they have defeated when they died.
-	}
+
 }

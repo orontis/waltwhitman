@@ -3,7 +3,7 @@
 public class STEMSuperhuman extends Adventurer 
 {
 	// first row - basic attacks, last element always special/ultimate move | second row - support
-	private static String[][] moveset = {{"[CS] Chemical Splash","[U] Uranium"},{"[MC] Mystery Concoction","[AT] Apple Totem"}};
+	private static String[][] moveset = {{"\u001B[32m[CS] Chemical Splash\u001b[0m","\u001b[33m[U] \u001B[31mU\u001B[32mr\u001B[34ma\u001B[35mn\u001B[36mi\u001B[37mu\u001B[33mm\u001b[0m"},{"\u001b[35m[MC] Mystery Concoction\u001B[0m]","\u001B[31m[AT] Apple Totem\u001B[0m"}};
 	private int healCounter = 2;
 	private static int healCounter_static = 2; // decreases by 1 whenever Mystery Concoction is used
 	private static String[][] movesetDescription = {{"BASIC ATTACK - 20% chance of dealing 15 damage to yourself; 80% change of dealing 15 damage to enemy","SPECIAL ATTACK - 25% chance of dealing 100 damage to enemy; 25% chance of healing 20 HP; 50% chance of instant death"},{"HEAL (" + healCounter_static + " uses) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP","DEFENSE - 60% chance of protecting against all damage; 20% chance of doing nothing; 20% chance of doubling all damage taken for 1 turn"}};	
@@ -34,7 +34,7 @@ public class STEMSuperhuman extends Adventurer
 			{
 				if (r == 1 && c == 0)
 				{
-					System.out.println("HEAL (" + this.healCounter + " uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP");
+					System.out.println("\u001B[35m[MC] Mystery Concoction\u001B[0m: HEAL (" + this.healCounter + " uses left) - 30% chance of dealing 10 damage to you; 10% chance of killing you instantly; 60% chance of healing 20 HP");
 				}
 				else
 				{
@@ -44,42 +44,50 @@ public class STEMSuperhuman extends Adventurer
 		}
 	}  
 	
-	public void action(String selection)
-	{
-		printMoveset();
-	}
 	
 	public String support(String move)
 	{
-		String moveL = move.toLowerCase();
-		if (moveL.equals("MC"))
+		if (!this.getStunState())
+		{
+		if (move.equals("MC"))
 		{
 			return mysteryConcoction(this);
 		}
-		else if (moveL.equals("AT"))
+		else if (move.equals("AT"))
 		{
 			return appleTotem(this);
 		}
 		else
 		{
-			return "Please input a valid ability name";
+			return "error";
+		}
+		}
+		else
+		{
+			return "You are stunned! You can't perform any moves.";
 		}
 	}
 	
 	public String support(String move, Adventurer other)
 	{
-		String moveL = move.toLowerCase();
-		if (moveL.equals("MC"))
+		if (!this.getStunState())
+		{
+		if (move.equals("MC"))
 		{
 			return mysteryConcoction(other);
 		}
-		else if (moveL.equals("AT"))
+		else if (move.equals("AT"))
 		{
 			return appleTotem(other);
 		}
 		else
 		{
-			return "Please input a valid ability name";
+			return "error";
+		}
+		}
+		else
+		{
+			return "You are stunned! You can't perform any moves.";
 		}
 	}
 	
@@ -130,18 +138,20 @@ public class STEMSuperhuman extends Adventurer
 	
 	public String attack(String move, Adventurer other)
 	{
-		String moveL = move.toLowerCase();
-		if (moveL.equals("CS"))
+		if (!this.getStunState())
+		{
+		if (move.equals("CS"))
 		{
 			return this.chemicalSplash(other);
 		}
-		else if (moveL.equals("U"))
+		else
 		{
 			return this.specialAttack(other); // remember to consider IQ count
 		}
+		}
 		else
 		{
-			return "Please input a valid ability name";
+			return "You are stunned! You can't perform any moves.";
 		}
 		
 	}
@@ -199,8 +209,6 @@ public class STEMSuperhuman extends Adventurer
 	@Override
 	public void printStatus()
 	{
-		if (this.getHP() > 0)
-		{
 			System.out.println(this.getRole() + " of name " + this.getName() + ":");
 			if (this.getHP() > this.getmaxHP() * 0.5)
 			{
@@ -226,11 +234,6 @@ public class STEMSuperhuman extends Adventurer
 				System.out.print(this.getStunState());
 			}
 			System.out.print("\n3) Defense - " + this.getDefense() + "\n4) " + this.getSpecialName() + " Count - " + this.getSpecial() + "/" + this.getSpecialMax());	
-		}
-		else
-		{
-			this.setLifeStatus(false);
-		}
 	}
 
 	//allows me to reset the healCounter every battle

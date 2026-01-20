@@ -1,5 +1,5 @@
 // Collaborators: Marc and Leon
-
+import java.util.ArrayList;
 import java.util.Random;
 
 public abstract class Adventurer extends Game{
@@ -38,26 +38,28 @@ public void printStatus()
 	System.out.println(role + " of name " + name + ":");
 	if (health > MAX_HP * 0.5)
 	{
-		System.out.print("\u001b[32mGreen");
+		System.out.print("\u001b[32m");
 	}
 	else if (health <= MAX_HP * 0.5 && health > MAX_HP * 0.25)
 	{
-		System.out.print("u001b[33mYellow");
+		System.out.print("\033[33m");
 	}
 	else
 	{
-		System.out.print("uoo1b[31mRed");
+		System.out.print("\033[91m");
 	}
-	System.out.print("1) Health - " + health + "/" + MAX_HP + "u001b[0m" + "\n2) Stunned - ");
+	System.out.print("1) Health - " + health + "/" + MAX_HP); 
+	System.out.print("\u001B[0m");
+	System.out.print("\n2) Stunned - ");
 	if (isStunned == true)
 	{
-		System.out.print(isStunned + " for " + stunCount + " turns");
+		System.out.print(isStunned + "\033[91mtrue for " + stunCount + " turns\u001B[0m");
 	}
 	else
 	{
 		System.out.print(isStunned);
 	}
-	System.out.print("\n3) Defense - " + defense + "\n4) " + specialName + " Count - " + specialCount + "/" + "specialMax");	
+	System.out.print("\n3) Defense - " + defense + "\n4) " + specialName + " Count - " + specialCount + "/" + specialMax);	
 }
 
   //toString method
@@ -87,12 +89,12 @@ public void printStatus()
 
   //concrete method written using abstract methods.
   //refill special resource by amount, but only up to at most getSpecialMax()
-  public int restoreSpecial(int n){
+  public String restoreSpecial(int n){
       if( n > getSpecialMax() - getSpecial()){
               n = getSpecialMax() - getSpecial();
       }
       setSpecial(getSpecial()+n);
-      return n;
+      return "The user rests and rejuvenates their mind for battle.";
   }
 
   //hurt or hinder the target adventurer
@@ -126,6 +128,7 @@ public void printStatus()
 	if (health < 0)
 	{
 		health = 0;
+		alive = false;
 	}
 	
 	if (damageMultiplier != 1)
@@ -246,7 +249,7 @@ public void heal(int healing) // heals entity
 		this.stunCount = n;
 	}
 	
-	public void setCurse(boolean newState)
+	public void setCurseState(boolean newState)
 	{
 		curseEnabled = newState;
 	}
