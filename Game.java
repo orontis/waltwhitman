@@ -7,16 +7,14 @@ public class Game
 	private static ArrayList<Adventurer> heroTeam = new ArrayList<Adventurer>();
 	private static ArrayList<Adventurer> enemyTeam = new ArrayList<Adventurer>();
 	private static int floor = 10;
-	private static int enemiesDefeated = 0;
 	private static boolean gameActive = false;
+	
 	public static void main(String[] args)
 	{
 		
 		//A way for the user to start the confirm
 		System.out.print("Welcome, brave and intelligent student of Stuyvesant! Beware, the evil Lunch Ladies have mind-controlled all of the teachers in the school, and it is up to you to free them and save the day! Do you accept? [Y/N] ");
 		confirmPlaying();
-		
-		
 	}
 	
 	public static void print(String input)
@@ -147,13 +145,13 @@ public static String chooseHeroRole()
 	{
 		if (floor == 0)
 		{
-			System.out.println("Amazing job, warrior! You have used strategy and bravery to push through each floor, saving the school and leaving safe and sound. You will be an inspiration for the many generations of students to come! \n\nDuring your adventure, you defeated " + enemiesDefeated + " enemies.");
+			System.out.println("Amazing job, warrior! You have used strategy and bravery to push through each floor, saving the school and leaving safe and sound. You will be an inspiration for the many generations of students to come! \n\nDuring your adventure, you defeated " + EvilStaff.getEnemiesDefeated() + " enemies.");
 			refreshHighScore();
 		}
 		else
 		{
 			prepareEnemies(floor);
-			executeBattle(
+			executeBattle(heroTeam, enemyTeam);
 			checkTeamHealth(heroTeam);
 			battles(floor - 1);
 		}
@@ -162,11 +160,29 @@ public static String chooseHeroRole()
 	//creates the enemy team
 	public static void prepareEnemies(int floor)
 	{
+		String[] lunchNames = String[] EVIL_LUNCH_LADIES = {"The Ladle Queen", "Madame Meatloaf", "Griselda the Gravy Witch", "The Sloppy Joe Overlord", "Supreme Cafeteria Matron", "The Nutritional Tyrant", "Baroness of Blandness", "Miss Mystery Meat", "The Sodium Sorceress", "Lady Leftovers",
+		"The Cafeteria Curdler", "Auntie Antibiotics", "The Overcooked Empress", "Dame Dry Chicken", "The Aproned One", "Lunch Period Warden", "The Ladle Bearer", "The Steam Table Keeper","The Cafeteria Sentinel"};
+		String[] teacherNames = {"Professor Blank-Eyes","The Chalkbound","The Mindmarked","Red-Eyed Instructor","The Lesson Enforcer","The Curriculum Thrall","The Obedient Educator","The Calculated One","The Grammar Warden","The Timekeeper",
+		"The Formula Slave","The Lab Puppet","The Essay Automaton","The Pop-Quiz Drone","Mr. Scantron","The Homework Haunter","The Extra Credit Zombie","The Rubric Reaper","The Attendance Enforcer"};
+
 		int rand = (int) (Math.random() * 2);
-		for (int i = 0; i < rand; i++)
+		for (int i = 0; i <= rand; i++)
 		{
-			
+			if (floor == 5 || floor == 1)
+			{
+				String chosenName = lunchNames[(int) (Math.random() * lunchNames.length - 1];
+			}
+			else
+			{
+				String chosenName = teacherNames[(int) (Math.random() * teacherNames.length];
+			}
+			enemyTeam.add(new EvilStaff(chosenName, floor));
 		}
+	}
+
+	public static void executeBattle(ArrayList<Adventurer> heroes, ArrayList<Adventurer> enemies)
+	{
+		
 	}
 	
 	//going to be used to assess how many adventurers the player has alive
@@ -199,7 +215,7 @@ public static String chooseHeroRole()
 	
 	public static void refreshHighScore()
 	{
-		if (enemiesDefeated > highScore)
+		if (EvilStaff.getEnemiesDefeated() > highScore)
 		{
 			print("Congrats! You have a new highscore!");
 			highScore = enemiesDefeated;
